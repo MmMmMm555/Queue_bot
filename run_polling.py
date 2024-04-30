@@ -1,7 +1,7 @@
 import os, django
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dtb.settings')
-django.setup()
+django.setup() # noqa F401
 
 from telegram import Bot
 from telegram.ext import Updater

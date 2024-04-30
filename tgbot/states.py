@@ -1,0 +1,1 @@
+NAME1, NAME2, PHONE = 'name1', 'name2', 'phone',
