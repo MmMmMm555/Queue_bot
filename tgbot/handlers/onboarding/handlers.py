@@ -40,7 +40,7 @@ def command_start(update: Update, context: CallbackContext) -> None:
             update.message.reply_text(text="Ismingizni kiriting 📝",)
             return states.NAME1
         elif u.phone_number:
-            update.message.reply_text(text="Siz ro'yxatdan o'tgansiz ✅",)
+            update.message.reply_text(text=f"Siz ro'yxatdan o'tgansiz ✅\nSizning tartib raqamingiz {u.order}",)
 
 
 def name1(update: Update, context: CallbackContext) -> None:
