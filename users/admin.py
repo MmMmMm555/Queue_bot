@@ -17,13 +17,13 @@ from import_export.resources import ModelResource
 
 class UserAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     search_help_text = "Search users by username or user ID."
-    
+    list_display = [
+        'user_id', 'username', 'first_name', 'last_name', 'phone_number', 'order',
+    ]
 
 
 admin.site.register(User, UserAdmin)
-# list_display = [
-#     'user_id', 'username', 'first_name', 'last_name', 'order', 'phone_number',
-# ]
+
 
 # actions = ['broadcast']
 

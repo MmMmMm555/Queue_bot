@@ -29,7 +29,8 @@ def setup_dispatcher(dp):
     """
     conv = ConversationHandler(
         entry_points=[
-
+            CommandHandler("start", onboarding_handlers.command_start),
+            MessageHandler(Filters.regex("^A'zolikni tekshirish ✅$"), onboarding_handlers.command_start),
         ],
         states={
             states.NAME1: [
@@ -47,6 +48,8 @@ def setup_dispatcher(dp):
                     Filters.contact,
                     onboarding_handlers.phone
                 ),
+                MessageHandler(
+                    Filters.regex('^998'), onboarding_handlers.phone)
             ],
         },
         fallbacks=[CommandHandler(

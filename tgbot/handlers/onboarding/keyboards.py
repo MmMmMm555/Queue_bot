@@ -20,3 +20,11 @@ send_contact = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True,
 )
+send_start = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="A'zolikni tekshirish ✅",)
+        ]
+    ],
+    resize_keyboard=True,
+)
