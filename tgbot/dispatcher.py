@@ -51,9 +51,19 @@ def setup_dispatcher(dp):
                 MessageHandler(
                     Filters.regex('^998'), onboarding_handlers.phone)
             ],
+            states.FREELANCE: [
+                MessageHandler(Filters.regex("(^Ha ✅$)"),
+                               onboarding_handlers.freelance),
+                MessageHandler(Filters.regex("^Yo'q ❌"),
+                               onboarding_handlers.freelance),
+            ],
+            states.TYPE: [
+                MessageHandler(Filters.text,
+                               onboarding_handlers.type),
+            ],
         },
         fallbacks=[CommandHandler(
-            'start', onboarding_handlers.command_start),],
+            'start', onboarding_handlers.command_start)],
     )
 
     dp.add_handler(conv)

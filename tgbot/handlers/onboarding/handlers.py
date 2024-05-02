@@ -6,12 +6,8 @@ from telegram.ext import CallbackContext, ConversationHandler
 from tgbot import states
 from telegram import Bot
 
-from tgbot.handlers.onboarding import static_text
-from tgbot.handlers.utils.info import extract_user_data_from_update
 from users.models import User
-from tgbot.handlers.onboarding.keyboards import make_keyboard_for_start_command
-from .keyboards import send_contact, send_start
-from dtb.settings import TELEGRAM_TOKEN
+from .keyboards import send_contact, send_start, yes_no
 
 
 def command_start(update: Update, context: CallbackContext) -> None:
@@ -36,11 +32,11 @@ def command_start(update: Update, context: CallbackContext) -> None:
         update.message.reply_text(
             text="Iltimos ushbu kanalimizga a'zo bo'ling\n https://t.me/freelanceuzofficial", reply_markup=send_start)
     elif member_status:
-        if created or u.phone_number == None:
-            update.message.reply_text(text="Ismingizni kiriting 📝",)
+        if created or u.registered == False:
+            update.message.reply_text(text="Ismingizni kiriting 📝", reply_markup=ReplyKeyboardRemove())
             return states.NAME1
-        elif u.phone_number:
-            update.message.reply_text(text=f"Siz ro'yxatdan o'tgansiz ✅\nSizning tartib raqamingiz {u.order}",)
+        elif u.registered:
+            update.message.reply_text(text=f"Siz ro'yxatdan o'tgansiz ✅\n\nSizning tartib raqamingiz {u.order}",)
 
 
 def name1(update: Update, context: CallbackContext) -> None:
@@ -77,8 +73,71 @@ def phone(update: Update, context: CallbackContext) -> None:
                 "Telefon raqam xato formatda kiritildi ❌\bQayta kiriting !")
             return states.PHONE
     u.phone_number = phone_number
+    u.save()
+    update.message.reply_text('Siz frilansmisiz ❓', reply_markup=yes_no)
+    return states.FREELANCE
+    # nubers = {
+    #     0: "0️⃣",
+    #     1: "1️⃣",
+    #     2: "2️⃣",
+    #     3: "3️⃣",
+    #     4: "4️⃣",
+    #     5: "5️⃣",
+    #     6: "6️⃣",
+    #     7: "7️⃣",
+    #     8: "8️⃣",
+    #     9: "9️⃣",
+    # }
+
+    # order = str(last_order)
+
+    # order_emoji = ''.join(nubers[int(i)] for i in order)
+    # update.message.reply_text(
+    #     text=f"<b>Sizning tartib raqamingiz</b>\n\n\n                  <b>{order_emoji}</b>", reply_markup=ReplyKeyboardRemove(), parse_mode="HTML")
+    # return ConversationHandler.END
+
+
+def freelance(update: Update, context: CallbackContext) -> None:
+    u = User.get_user(update, context)
+    text = update.message.text
+    if text == "Ha ✅":
+        u.freelance = True
+        u.save()
+        update.message.reply_text("Frilanserlikning qaysi turi bilan shug'ullanasiz ❓\n(yozing)", reply_markup=ReplyKeyboardRemove())
+        return states.TYPE
+    elif text == "Yo'q ❌":
+        last_order = User.objects.order_by("order").last().order + 1
+        u.order = last_order
+        u.registered = True
+        u.save()
+        nubers = {
+            0: "0️⃣",
+            1: "1️⃣",
+            2: "2️⃣",
+            3: "3️⃣",
+            4: "4️⃣",
+            5: "5️⃣",
+            6: "6️⃣",
+            7: "7️⃣",
+            8: "8️⃣",
+            9: "9️⃣",
+        }
+
+        order = str(last_order)
+
+        order_emoji = ''.join(nubers[int(i)] for i in order)
+        update.message.reply_text(
+            text=f"<b>Sizning tartib raqamingiz</b>\n\n\n                  <b>{order_emoji}</b>", reply_markup=ReplyKeyboardRemove(), parse_mode="HTML")
+        return ConversationHandler.END
+
+
+def type(update: Update, context: CallbackContext) -> None:
+    u = User.get_user(update, context)
+    text = update.message.text
+    u.types = text
     last_order = User.objects.order_by("order").last().order + 1
     u.order = last_order
+    u.registered = True
     u.save()
     nubers = {
         0: "0️⃣",
@@ -99,3 +158,4 @@ def phone(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(
         text=f"<b>Sizning tartib raqamingiz</b>\n\n\n                  <b>{order_emoji}</b>", reply_markup=ReplyKeyboardRemove(), parse_mode="HTML")
     return ConversationHandler.END
+    

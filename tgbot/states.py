@@ -1,1 +1,1 @@
-NAME1, NAME2, PHONE = 'name1', 'name2', 'phone',
+NAME1, NAME2, PHONE, FREELANCE, TYPE = 'name1', 'name2', 'phone', 'freelance', 'type'
