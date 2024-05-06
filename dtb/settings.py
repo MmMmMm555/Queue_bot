@@ -101,7 +101,15 @@ ASGI_APPLICATION = 'dtb.asgi.application'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600, default="sqlite:///db.sqlite3"),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Database backend for PostgreSQL
+        'NAME': 'bot',  # Name of the PostgreSQL database
+        'USER': 'postgres',  # PostgreSQL username
+        'PASSWORD': 'admin',  # PostgreSQL password
+        'HOST': 'localhost',  # Host where the PostgreSQL server is running (use 'localhost' if it's on the same machine)
+        'PORT': '5432',  # Port where the PostgreSQL server is running (default is 5432)
+    }
+    # 'default': dj_database_url.config(conn_max_age=600, default="sqlite:///db.sqlite3"),
 }
 
 # Password validation
@@ -155,7 +163,8 @@ CELERY_TASK_DEFAULT_QUEUE = 'default'
 
 
 # -----> TELEGRAM
-TELEGRAM_TOKEN = '6300934660:AAGspvp1JCF2_MpbNkSz2vy-nfkJi3avMxs'
+TELEGRAM_TOKEN = "6430171416:AAEvxclJeKfv3lZWcPOyUvwBIA2OY4hgbuQ"
+# '6300934660:AAGspvp1JCF2_MpbNkSz2vy-nfkJi3avMxs'
 # os.getenv("TELEGRAM_TOKEN")
 if TELEGRAM_TOKEN is None:
     logging.error(
