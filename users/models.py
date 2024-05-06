@@ -17,6 +17,7 @@ class AdminUserManager(Manager):
 
 
 class User(CreateUpdateTracker):
+    id = models.AutoField(primary_key=True)
     user_id = models.PositiveBigIntegerField(unique=True)  # telegram_id
     username = models.CharField(max_length=32, **nb)
     order = models.PositiveIntegerField(default=0, null=True)
